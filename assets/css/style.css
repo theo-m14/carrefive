@@ -1,0 +1,191 @@
+.imageSingleProduct{
+    width: 20%;
+}
+
+.productContainer{
+    display: flex;
+    gap: 8em;
+    justify-content: center;
+    margin-top: 10%;
+    text-align: center;
+    align-items: center;
+}
+
+.productContainer div{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4em;
+}
+
+.productContainer span{
+    background-color: rgb(212, 212, 212);
+    padding: 1em;
+    border-radius: 5px;
+}
+
+.productContainer p{
+    font-weight: 600;
+}
+
+.productContainer h2{
+    font-weight: bold;
+    margin-bottom: 1em;
+}
+
+.product_outOfStock{
+    color: red;
+}
+
+#product_stock{
+    width: 10%;
+    margin: 1em 0;
+}
+
+#stockContainer{
+    flex-direction: row;
+    align-items: center;
+}
+
+.addProductForm{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 50%;
+    margin: 4em auto;
+    padding: 2em;
+    gap: 1em;
+    background-color: white;
+    box-shadow: 0 20px 27px 0 rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+}
+
+.addProductForm>label{
+    font-size: 0.85em;
+}
+
+.addProductForm #submitAddProduct{
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.requiredChamp{
+    padding-top: 0.5em;
+    font-size: 0.7em;
+    font-style: italic;
+}
+
+.productInfo{
+    background-color: white;
+    box-shadow: 0 20px 27px 0 rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+    padding: 1em 3em;
+    gap: 5em;
+}
+
+#submitAddProduct{
+    width: 33%;
+    margin:1em auto;
+}
+
+.editProduct{
+    align-items: center;
+    margin-top: 2em;
+}
+
+.editProductForm{
+    width: 100%;
+    margin-top: 2em;
+    margin-right: 4em;
+    text-align: center;
+}
+
+#deleteImageContainer{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#deleteImageContainer input{
+    margin-bottom: 7px;
+}
+
+.alert-message{
+    color: red;
+    font-weight: bold;
+    text-align: center;
+}
+
+.table{
+    position: relative;
+}
+
+.deleteModal{
+    background-color: rgba(128, 128, 128, 0.755);
+    box-shadow: 3px 3px 8px black;
+    padding: 1em;
+    position: absolute;
+    left: 30%;
+    top:0;
+    border-radius: 20px;
+}
+
+.deleteModal div{
+    display: flex;
+    justify-content: center;
+    gap: 2em;
+}
+
+.deleteModal p{
+    color: white;
+
+}
+
+.deleteModal a{
+    color: red;
+    background-color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.displayNone{
+    display: none;
+}
+
+th span{
+    padding-left: 5px;
+}
+
+th:hover{
+    cursor: pointer;
+}
+
+tr th.active{
+    color: black !important;
+}
+
+#exportCSV{
+    margin:1em;
+    padding: 10px 5px;
+    background-color: lightgray;
+    border-radius: 5px;
+    width: 15%;
+    text-align: center;
+    font-weight: 600;
+}
+
+@media screen  and (max-width:1200px){
+    #exportCSV{
+        width: 90%;
+        margin:1em auto;
+    }
+}
+
+.productDisplayOption{
+    background-color: #aaaeb7;
+    margin: 1em;
+    width: 20%;
+    padding: 10px 5px;
+    border-radius: 10px;
+    text-align: center;
+}
