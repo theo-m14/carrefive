@@ -4,8 +4,10 @@ session_start();
 require_once('src/bddcall.php');
 require_once('src/functions.php');
 $bdd = bddcall();
-$cartArray = createOrderArray($bdd);
-
+$cartArray = [];
+if(isset($_SESSION['cart'])){
+    $cartArray = createOrderArray($bdd);
+}
 $errorMessage = [
     'missingInput' => "Un champs obligatoire est manquant",
     'invalidNumber' => "Votre numéro de téléphone n'est pas valide",

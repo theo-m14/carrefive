@@ -296,11 +296,12 @@ function getNumberOfOrderNotAccepted($bdd){
     }
 }
 
-function orderIdIsValid($bdd,$id) : bool{
+function orderIdIsValid($bdd,$id,$isAccepted) : bool{
     try {
-        $orderIsValid = $bdd->prepare('SELECT COUNT(*) as numberOrder FROM customer_order WHERE customer_order.accepted = 0 and customer_order.id=:id');
+        $orderIsValid = $bdd->prepare('SELECT COUNT(*) as numberOrder FROM customer_order WHERE customer_order.accepted =:isAccepted and customer_order.id=:id');
         $orderIsValid->execute(array(
             'id' => $id,
+            'isAccepted' => $isAccepted,
         ));
         $result = $orderIsValid->fetch();
         return ($result['numberOrder'] == 1);
@@ -327,6 +328,17 @@ function acceptOrder($bdd,$id){
         $acceptOrder = $bdd->prepare('UPDATE customer_order SET customer_order.accepted=1 WHERE customer_order.id=:id');
         $acceptOrder->execute(array(
         'id' => $id,
+        ));
+    } catch (\PDOException $e) {
+        die('erreur : ' .$e->getMessage());
+    }
+}
+
+function deleteOrder($bdd,$id){
+    try {
+        $deleteOrder = $bdd->prepare('DELETE FROM customer_order WHERE id=:id ');
+        $deleteOrder->execute(array(
+            'id' => $id,
         ));
     } catch (\PDOException $e) {
         die('erreur : ' .$e->getMessage());

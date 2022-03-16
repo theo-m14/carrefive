@@ -46,6 +46,7 @@ include_once '_navbar.php';
         <tbody>';
         while($currentProduct['id_order']==$currentOrderId){
             $totalOrder += $currentProduct['quantity']*$currentProduct['price'];
+            if($currentProduct['product_stock'] - $currentProduct['quantity'] < 0) $validStock = false;
             echo '<tr>
                     <td>
                         <p class="text-xs font-weight-bold mb-0 text-center">
@@ -83,18 +84,30 @@ include_once '_navbar.php';
                 <td class="footValue">' . $totalOrder . '€ </td>
             </tr>';
             if(!isset($_GET['orderAccepted'])){
-                echo '<tr>
+                if($validStock){
+                    echo '<tr>
                 <td colspan="5">Envoyer commande : </td>
                 <td class="footValue">
                     <form action="orderManagment.php?validateOrder" method="POST">
                         <input type="hidden" name="id" value="' . $currentOrderId .' ">
                         <button type="submit">Valider</button>
                     </form>
-                </td>
-            </tr>';
+                </td></tr>';
+                }
             }
-            echo '</tfoot>
+            echo '<tr>
+            <td colspan="5">Supprimer la commande </td>
+            <td class="footValue">
+                <form action="orderManagment.php?deleteOrder'. $acceptedOrder . '" method="POST">
+                    <input type="hidden" name="id" value="' . $currentOrderId .' ">
+                    <button type="submit">Valider</button>
+                </form>
+            </td>
+        </tr></tfoot>
     </table>';
+    if(!$validStock && !isset($_GET['orderAccepted'])){
+        echo "<div class='stock_problem'><p>La commande ne peut être validé en raison d'un stock insuffisant</p></div>";
+    }
     }
 
     ?>

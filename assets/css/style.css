@@ -300,3 +300,9 @@ tr th.active{
     justify-content: center;
     flex-wrap: wrap;
 }
+
+.stock_problem{
+    text-align: center;
+    font-weight: bold;
+    color: red;
+}
