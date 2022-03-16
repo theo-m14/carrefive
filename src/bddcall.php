@@ -43,7 +43,7 @@ function getOutOfStockProduct($bdd){
 
 function getOneProduct($bdd,$id){
     try{
-        $oneProduct = $bdd->prepare('SELECT * FROM product LEFT JOIN category ON product.category_id = category.id LEFT JOIN user ON product.last_modif_user = user.id WHERE product_id=:productId');
+        $oneProduct = $bdd->prepare('SELECT product.product_id,product.name,product.description,product.price,product.image,product.dlc,product.category_id,category.id,category.category_name,product.last_modif_user,user.username,product.product_stock FROM product LEFT JOIN category ON product.category_id = category.id LEFT JOIN user ON product.last_modif_user = user.id WHERE product_id=:productId');
         $oneProduct->execute(array(
         'productId' => $id,
         ));
@@ -52,6 +52,7 @@ function getOneProduct($bdd,$id){
         die('Erreur : ' . $e->getMessage());
     }
 }
+
 
 function getNumberOfProduct($bdd): int{ 
     try{
@@ -245,6 +246,121 @@ function userIsAdmin($bdd,$username) : bool{
         $result = $requestIsAdmin->fetch();
         return ($result['admin'] == 1);
     } catch (PDOException $e) {
+        die('erreur : ' .$e->getMessage());
+    }
+}
+
+function createOrder($bdd,$infoUser){
+    try {
+        $requestNewOrder = $bdd->prepare('INSERT INTO customer_order (customer_order.name,customer_order.number,customer_order.adress) VALUES(:customer_name,:customer_number,:customer_adress)');
+        $requestNewOrder->execute(array(
+        'customer_name' => $infoUser['name'],
+        'customer_number' => $infoUser['number'],
+        'customer_adress' => $infoUser['adress'],
+        ));
+        $indexOfOrder = $bdd->query('SELECT MAX(id) as id from customer_order');
+        return $indexOfOrder->fetch();
+    } catch (\PDOEXception $e) {
+        die('erreur a la création: ' .$e->getMessage());
+    }
+}
+
+function createOrderProduct($bdd,$product,$order_id){
+    try {
+        $newOrderProduct = $bdd->prepare('INSERT INTO order_product(order_product.id_order,order_product.id_product,order_product.quantity) VALUES(:id_order,:product_id,:quantity)');
+        $newOrderProduct->execute(array(
+            'id_order' => $order_id,
+            'product_id' => $product['product_id'],
+            'quantity' => $product['quantity'],
+        ));
+    } catch (\PDOException $e) {
+        die('erreur : ' .$e->getMessage());
+    }
+}
+
+function getAllOrderNotAccepted($bdd){
+    try {
+        $requestAllOrderNotAccepted = $bdd->query('SELECT *,customer_order.name AS customer_name FROM customer_order LEFT JOIN order_product ON order_product.id_order = customer_order.id LEFT JOIN product ON order_product.id_product = product.product_id WHERE customer_order.accepted = 0 ORDER BY customer_order.id');
+        return $requestAllOrderNotAccepted;
+    } catch (\PDOException $e) {
+        die('erreur : ' .$e->getMessage());
+    }
+}
+
+function getNumberOfOrderNotAccepted($bdd){
+    try {
+        $requestAllOrderNotAccepted = $bdd->query('SELECT COUNT(*) as numberOrder FROM customer_order WHERE customer_order.accepted = 0');
+        return $requestAllOrderNotAccepted->fetch();
+    } catch (\PDOException $e) {
+        die('erreur : ' .$e->getMessage());
+    }
+}
+
+function orderIdIsValid($bdd,$id) : bool{
+    try {
+        $orderIsValid = $bdd->prepare('SELECT COUNT(*) as numberOrder FROM customer_order WHERE customer_order.accepted = 0 and customer_order.id=:id');
+        $orderIsValid->execute(array(
+            'id' => $id,
+        ));
+        $result = $orderIsValid->fetch();
+        return ($result['numberOrder'] == 1);
+    } catch (\PDOException $e) {
+        die('erreur : ' .$e->getMessage());
+    }
+}
+
+function getOrder($bdd,$id){
+    try {
+        $requestOrder = $bdd->prepare('SELECT *,customer_order.name AS customer_name FROM customer_order LEFT JOIN order_product ON order_product.id_order = customer_order.id LEFT JOIN product ON order_product.id_product = product.product_id WHERE customer_order.id=:id');
+        $requestOrder->execute(array(
+        'id' => $id,
+        ));
+        $result = $requestOrder->fetchAll();
+        return $result;
+    } catch (\PDOException $e) {
+        die('erreur : ' .$e->getMessage());
+    }
+}
+
+function acceptOrder($bdd,$id){
+    try {
+        $acceptOrder = $bdd->prepare('UPDATE customer_order SET customer_order.accepted=1 WHERE customer_order.id=:id');
+        $acceptOrder->execute(array(
+        'id' => $id,
+        ));
+    } catch (\PDOException $e) {
+        die('erreur : ' .$e->getMessage());
+    }
+}
+
+function updateProductStock($bdd,$productId,$newStock){
+    try {
+        $updateStock = $bdd->prepare('UPDATE product SET product.product_stock=:newStock WHERE product.product_id=:productId');
+        $updateStock->execute(array(
+            'newStock' => $newStock,
+            'productId' => $productId,
+        ));
+    } catch (\PDOException $e) {
+        die('erreur : ' .$e->getMessage());
+    }
+}
+
+// LEFT JOIN category ON product.category_id = category.id LEFT JOIN user ON product.last_modif_user = user.id
+
+function getAllOrderAccepted($bdd){
+    try {
+        $requestAllOrderAccepted = $bdd->query('SELECT *,customer_order.name AS customer_name FROM customer_order LEFT JOIN order_product ON order_product.id_order = customer_order.id LEFT JOIN product ON order_product.id_product = product.product_id WHERE customer_order.accepted = 1 ORDER BY customer_order.id');
+        return $requestAllOrderAccepted;
+    } catch (\PDOException $e) {
+        die('erreur : ' .$e->getMessage());
+    }
+}
+
+function getNumberOfOrderAccepted($bdd){
+    try {
+        $requestAllOrderAccepted = $bdd->query('SELECT COUNT(*) as numberOrder FROM customer_order WHERE customer_order.accepted = 1');
+        return $requestAllOrderAccepted->fetch();
+    } catch (\PDOException $e) {
         die('erreur : ' .$e->getMessage());
     }
 }

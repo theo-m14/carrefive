@@ -44,4 +44,13 @@ function exportCSV($bdd){
     }
     fclose($exportFile);
 }
+
+function createOrderArray($bdd): array{
+    $cartArray = [];
+    for ($i=0; $i < count($_SESSION['cart']); $i++) { 
+        array_push($cartArray,getOneProduct($bdd,$_SESSION['cart'][$i]['id'])->fetch());
+        $cartArray[$i]['quantity'] = $_SESSION['cart'][$i]['quantity'];
+    }
+    return $cartArray;
+}
 ?>
